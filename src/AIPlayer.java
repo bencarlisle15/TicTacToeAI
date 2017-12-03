@@ -10,17 +10,17 @@ public class AIPlayer implements Player {
 	private Random random = new Random();
 	private Move move = Move.getInstance();
 	private HashSet<Position> totalPositions;
-	private boolean isIntelligent;
+	private boolean isReading;
 	private String name;
 
-	public AIPlayer(String name, boolean isIntelligent) {
+	public AIPlayer(String name, boolean isReading) {
 		this.name = name;
-		this.isIntelligent = isIntelligent;
+		this.isReading = isReading;
 		totalPositions = Support.readFile(this);
 	}
 
-	public boolean isIntelligent() {
-		return isIntelligent;
+	public boolean isReading() {
+		return isReading;
 	}
 
 	public String getName() {
@@ -53,14 +53,24 @@ public class AIPlayer implements Player {
 		}
 	}
 
+	@Override
+	public void resetScores() {
+		wins = 0;
+		ties = 0;
+		losses = 0;
+	}
+
+	@Override
 	public int getWins() {
 		return wins;
 	}
 
+	@Override
 	public int getLosses() {
 		return losses;
 	}
 
+	@Override
 	public int getTies() {
 		return ties;
 	}
@@ -74,7 +84,7 @@ public class AIPlayer implements Player {
 		ArrayList<Move> legalMoves = Support.findLegalMoves(board);
 		Move newMove = legalMoves.get(random.nextInt(legalMoves.size()));
 		Move potentialMove;
-		if (isIntelligent) {
+		if (name.equals("John")) {
 			for (Position position : totalPositions) {
 				if (Support.checkEquals(position.getBoard(), board)) {
 					potentialMove = getMove(position, legalMoves);

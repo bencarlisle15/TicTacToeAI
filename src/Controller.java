@@ -3,7 +3,7 @@ public class Controller {
 	private Player player1;
 	private Player player2;
 	private Status gameStatus;
-	private Board board = new Board();;
+	private Board board = new Board();
 
 	public void startGame(Player player1, Player player2) {
 		this.player1 = player1;

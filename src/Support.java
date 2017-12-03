@@ -63,7 +63,7 @@ public class Support {
 
 	public static HashSet<Position> readFile(AIPlayer player) {
 		HashSet<Position> tempPositions = new HashSet<Position>();
-		if (player.isIntelligent()) {
+		if (player.isReading()) {
 			try {
 				String fileName = "Positions" + player.getName() + ".txt";
 				FileInputStream fileStream = new FileInputStream(fileName);
