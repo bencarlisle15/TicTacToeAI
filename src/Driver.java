@@ -23,8 +23,19 @@ public class Driver extends Application {
 		BorderPane mainPane = new BorderPane();
 		NumberTextField trials = new NumberTextField(100000);
 		trials.setOnAction(value -> {
-			Platform.runLater(
-					new Thread(() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText()))));
+			boolean tempStarted;
+			synchronized (this) {
+				tempStarted = started;
+			}
+			if (!tempStarted) {
+				if (player1 instanceof HumanPlayer || player2 instanceof HumanPlayer) {
+					Platform.runLater(
+							() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText())));
+				} else {
+					new Thread(() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText())))
+							.start();
+				}
+			}
 		});
 		TextArea textArea = new TextArea();
 		HBox options = new HBox();
@@ -60,8 +71,13 @@ public class Driver extends Application {
 				tempStarted = started;
 			}
 			if (!tempStarted) {
-				Platform.runLater(new Thread(
-						() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText()))));
+				if (player1 instanceof HumanPlayer || player2 instanceof HumanPlayer) {
+					Platform.runLater(
+							() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText())));
+				} else {
+					new Thread(() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText())))
+							.start();
+				}
 			}
 		});
 		options.getChildren().add(trials);
@@ -82,12 +98,16 @@ public class Driver extends Application {
 		int val = 1;
 		for (int i = 0; i < trials; i++) {
 			if (i % 10000 == 0 || i % (val = val * 10 == i ? i : val) == 0) {
-				System.out.println(i);
+				synchronized (this) {
+					System.out.println(i);
+				}
 			}
 			new Controller().startGame(player1, player2);
 		}
-		System.out.println("Player 1 (wins, ties, losses)" + player1.getWins() + ", " + player1.getTies() + ", "
-				+ player1.getLosses());
+		synchronized (this) {
+			System.out.append("Player 1 (wins, ties, losses)" + player1.getWins() + ", " + player1.getTies() + ", "
+					+ player1.getLosses() + "\n");
+		}
 		if (player1 instanceof AIPlayer) {
 			AIPlayer aiPlayer1 = (AIPlayer) player1;
 			if (aiPlayer1.isReading()) {

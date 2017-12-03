@@ -122,18 +122,18 @@ public class Support {
 	}
 
 	public static void printBoard(Letter[][] board) {
-		System.out.println();
+		System.out.append("\n");
 		for (Letter[] element : board) {
 			for (Letter element2 : element) {
 				if (element2 == Letter.X) {
-					System.out.print("X ");
+					System.out.append("X ");
 				} else if (element2 == Letter.O) {
-					System.out.print("O ");
+					System.out.append("O ");
 				} else {
-					System.out.print("- ");
+					System.out.append("- ");
 				}
 			}
-			System.out.println();
+			System.out.append("\n");
 		}
 	}
 }

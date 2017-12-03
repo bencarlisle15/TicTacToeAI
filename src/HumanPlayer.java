@@ -3,6 +3,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Window;
 
 public class HumanPlayer implements Player {
 
@@ -23,28 +24,33 @@ public class HumanPlayer implements Player {
 
 	@Override
 	public void alertEnd(Result result) {
-		if (result == Result.WIN) {
-			System.out.println("You win!");
-			wins++;
-		} else if (result == Result.TIE) {
-			System.out.println("It's a tie.");
-			ties++;
-		} else {
-			System.out.println("You Lose!");
-			losses++;
+		synchronized (this) {
+			if (result == Result.WIN) {
+				System.out.append("You win!\n");
+				wins++;
+			} else if (result == Result.TIE) {
+				System.out.append("It's a tie.\n");
+				ties++;
+			} else {
+				System.out.append("You Lose!\n");
+				losses++;
+			}
 		}
 	}
 
 	@Override
 	public void alertPlayerToMove(Letter[][] board) {
-		Support.printBoard(board);
-		System.out.println();
+		synchronized (this) {
+			Support.printBoard(board);
+			System.out.append("\n");
+		}
 		dialog();
 	}
 
 	public void dialog() {
 		Dialog<String> dialog = new Dialog<>();
-		dialog.setOnCloseRequest(value -> System.exit(0));
+		Window window = dialog.getDialogPane().getScene().getWindow();
+		window.setOnCloseRequest(event -> System.exit(0));
 		dialog.setTitle("Enter Attributes");
 		dialog.setHeaderText("Enter Attributes");
 		Label rowLabel = new Label("Row: ");
@@ -58,6 +64,14 @@ public class HumanPlayer implements Player {
 		grid.add(textCol, 2, 2);
 		dialog.getDialogPane().setContent(grid);
 		ButtonType button = new ButtonType("Submit", ButtonData.OK_DONE);
+		textRow.setOnAction(value -> {
+			move = new Move(Integer.parseInt(textRow.getText()), Integer.parseInt(textCol.getText()));
+			dialog.close();
+		});
+		textRow.setOnAction(value -> {
+			move = new Move(Integer.parseInt(textRow.getText()), Integer.parseInt(textCol.getText()));
+			dialog.close();
+		});
 		dialog.getDialogPane().getButtonTypes().add(button);
 		dialog.showAndWait();
 		if (textRow.getText().length() == 0 || textCol.getText().length() == 0) {
