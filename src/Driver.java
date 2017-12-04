@@ -49,14 +49,14 @@ public class Driver extends Application {
 			if (player1Options.getValue().equals("Intelligent AI")) {
 				player1 = new AIPlayer("John", true);
 			} else if (player1Options.getValue().equals("Dumb AI")) {
-				player1 = new AIPlayer("Donald", false);
+				player1 = new AIPlayer("John", false);
 			} else {
 				player1 = new HumanPlayer();
 			}
 		});
 		player2Options.setOnAction(value -> {
 			if (player2Options.getValue().equals("Intelligent AI")) {
-				player2 = new AIPlayer("John", false);
+				player2 = new AIPlayer("Donald", true);
 			} else if (player2Options.getValue().equals("Dumb AI")) {
 				player2 = new AIPlayer("Donald", false);
 			} else {
@@ -110,9 +110,19 @@ public class Driver extends Application {
 		}
 		if (player1 instanceof AIPlayer) {
 			AIPlayer aiPlayer1 = (AIPlayer) player1;
-			if (aiPlayer1.isReading()) {
+			if (aiPlayer1.isIntelligent()) {
 				try {
 					Support.preserveData(aiPlayer1);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		if (player2 instanceof AIPlayer) {
+			AIPlayer aiPlayer2 = (AIPlayer) player2;
+			if (aiPlayer2.isIntelligent()) {
+				try {
+					Support.preserveData(aiPlayer2);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

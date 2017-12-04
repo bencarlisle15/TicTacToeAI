@@ -63,7 +63,7 @@ public class Support {
 
 	public static HashSet<Position> readFile(AIPlayer player) {
 		HashSet<Position> tempPositions = new HashSet<Position>();
-		if (player.isReading()) {
+		if (player.isIntelligent()) {
 			try {
 				String fileName = "Positions" + player.getName() + ".txt";
 				FileInputStream fileStream = new FileInputStream(fileName);
@@ -122,18 +122,20 @@ public class Support {
 	}
 
 	public static void printBoard(Letter[][] board) {
-		System.out.append("\n");
-		for (Letter[] element : board) {
-			for (Letter element2 : element) {
-				if (element2 == Letter.X) {
-					System.out.append("X ");
-				} else if (element2 == Letter.O) {
-					System.out.append("O ");
-				} else {
-					System.out.append("- ");
-				}
-			}
+		synchronized (board) {
 			System.out.append("\n");
+			for (Letter[] element : board) {
+				for (Letter element2 : element) {
+					if (element2 == Letter.X) {
+						System.out.append("X ");
+					} else if (element2 == Letter.O) {
+						System.out.append("O ");
+					} else {
+						System.out.append("- ");
+					}
+				}
+				System.out.append("\n");
+			}
 		}
 	}
 }

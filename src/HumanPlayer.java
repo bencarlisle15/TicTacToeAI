@@ -40,8 +40,8 @@ public class HumanPlayer implements Player {
 
 	@Override
 	public void alertPlayerToMove(Letter[][] board) {
+		Support.printBoard(board);
 		synchronized (this) {
-			Support.printBoard(board);
 			System.out.append("\n");
 		}
 		dialog();

@@ -10,17 +10,17 @@ public class AIPlayer implements Player {
 	private Random random = new Random();
 	private Move move = Move.getInstance();
 	private HashSet<Position> totalPositions;
-	private boolean isReading;
+	private boolean isIntelligent;
 	private String name;
 
-	public AIPlayer(String name, boolean isReading) {
+	public AIPlayer(String name, boolean isIntelligent) {
 		this.name = name;
-		this.isReading = isReading;
+		this.isIntelligent = isIntelligent;
 		totalPositions = Support.readFile(this);
 	}
 
-	public boolean isReading() {
-		return isReading;
+	public boolean isIntelligent() {
+		return isIntelligent;
 	}
 
 	public String getName() {
@@ -84,7 +84,7 @@ public class AIPlayer implements Player {
 		ArrayList<Move> legalMoves = Support.findLegalMoves(board);
 		Move newMove = legalMoves.get(random.nextInt(legalMoves.size()));
 		Move potentialMove;
-		if (name.equals("John")) {
+		if (isIntelligent) {
 			for (Position position : totalPositions) {
 				if (Support.checkEquals(position.getBoard(), board)) {
 					potentialMove = getMove(position, legalMoves);
