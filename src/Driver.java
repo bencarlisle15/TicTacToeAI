@@ -62,11 +62,17 @@ public class Driver extends Application {
 		});
 		Button submit = new Button("Submit");
 		submit.setOnAction(value -> {
-			boolean tempStarted;
-			synchronized (this) {
-				tempStarted = started;
-			}
-			if (!tempStarted) {
+			new Thread(()->{
+				if (started) {
+					while (started) {
+						try {
+							Thread.sleep(0);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
+				}
 				if (player1 instanceof HumanPlayer || player2 instanceof HumanPlayer) {
 					Platform.runLater(
 							() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText())));
@@ -74,7 +80,7 @@ public class Driver extends Application {
 					new Thread(() -> submit(trials.getText().length() == 0 ? 0 : Integer.parseInt(trials.getText())))
 							.start();
 				}
-			}
+			}).start();
 		});
 		options.getChildren().add(trials);
 		options.getChildren().add(player1Options);

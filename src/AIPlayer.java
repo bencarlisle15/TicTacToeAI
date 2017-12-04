@@ -123,7 +123,7 @@ public class AIPlayer implements Player {
 		}
 		for (Move move : position.getMoves().keySet()) {
 			if (legalMoves.contains(move)
-					&& position.getMoves().get(move).get(Result.WIN) > 3
+					&& position.getMoves().get(move).get(Result.WIN)> 3
 							* position.getMoves().get(move).get(Result.LOSS)
 					|| position.getMoves().get(move).get(Result.LOSS) == 0) {
 				goodMoves.add(move);
