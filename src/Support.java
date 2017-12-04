@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import javafx.application.Platform;
+
 public class Support {
 
 	public static ArrayList<Move> findLegalMoves(Letter[][] board) {
@@ -123,18 +125,18 @@ public class Support {
 
 	public static void printBoard(Letter[][] board) {
 		synchronized (board) {
-			System.out.append("\n");
+			Platform.runLater(()->Driver.addToTextArea("\n"));
 			for (Letter[] element : board) {
 				for (Letter element2 : element) {
 					if (element2 == Letter.X) {
-						System.out.append("X ");
+						Platform.runLater(()->Driver.addToTextArea("X "));
 					} else if (element2 == Letter.O) {
-						System.out.append("O ");
+						Platform.runLater(()->Driver.addToTextArea("O "));
 					} else {
-						System.out.append("- ");
+						Platform.runLater(()->Driver.addToTextArea("- "));
 					}
 				}
-				System.out.append("\n");
+				Platform.runLater(()->Driver.addToTextArea("\n"));
 			}
 		}
 	}

@@ -1,4 +1,5 @@
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.application.Platform;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -24,26 +25,22 @@ public class HumanPlayer implements Player {
 
 	@Override
 	public void alertEnd(Result result) {
-		synchronized (this) {
-			if (result == Result.WIN) {
-				System.out.append("You win!\n");
-				wins++;
-			} else if (result == Result.TIE) {
-				System.out.append("It's a tie.\n");
-				ties++;
-			} else {
-				System.out.append("You Lose!\n");
-				losses++;
-			}
+		if (result == Result.WIN) {
+			Platform.runLater(()->Driver.addToTextArea("You win!\n"));
+			wins++;
+		} else if (result == Result.TIE) {
+			Platform.runLater(()->Driver.addToTextArea("It's a tie.\n"));
+			ties++;
+		} else {
+			Platform.runLater(()->Driver.addToTextArea("You Lose!\n"));
+			losses++;
 		}
 	}
 
 	@Override
 	public void alertPlayerToMove(Letter[][] board) {
 		Support.printBoard(board);
-		synchronized (this) {
-			System.out.append("\n");
-		}
+		Platform.runLater(()->Driver.addToTextArea("\n"));
 		dialog();
 	}
 
@@ -72,6 +69,7 @@ public class HumanPlayer implements Player {
 			move = new Move(Integer.parseInt(textRow.getText()), Integer.parseInt(textCol.getText()));
 			dialog.close();
 		});
+		textRow.requestFocus();
 		dialog.getDialogPane().getButtonTypes().add(button);
 		dialog.showAndWait();
 		if (textRow.getText().length() == 0 || textCol.getText().length() == 0) {

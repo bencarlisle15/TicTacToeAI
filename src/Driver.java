@@ -1,7 +1,4 @@
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
@@ -17,6 +14,7 @@ public class Driver extends Application {
 	private Player player1 = new AIPlayer("John", true);
 	private Player player2 = new AIPlayer("Donald", false);
 	private boolean started;
+	private static TextArea textArea = new TextArea();
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -37,7 +35,6 @@ public class Driver extends Application {
 				}
 			}
 		});
-		TextArea textArea = new TextArea();
 		HBox options = new HBox();
 		ComboBox<String> player1Options = new ComboBox<String>();
 		ComboBox<String> player2Options = new ComboBox<String>();
@@ -64,7 +61,6 @@ public class Driver extends Application {
 			}
 		});
 		Button submit = new Button("Submit");
-		System.setOut(new PrintStream(new Console(textArea), true));
 		submit.setOnAction(value -> {
 			boolean tempStarted;
 			synchronized (this) {
@@ -98,16 +94,16 @@ public class Driver extends Application {
 		int val = 1;
 		for (int i = 0; i < trials; i++) {
 			if (i % 10000 == 0 || i % (val = val * 10 == i ? i : val) == 0) {
-				synchronized (this) {
-					System.out.println(i);
-				}
+				final int tempVal = i;
+				Platform.runLater(()->addToTextArea(String.valueOf(tempVal + "\n")));
 			}
 			new Controller().startGame(player1, player2);
 		}
-		synchronized (this) {
-			System.out.append("Player 1 (wins, ties, losses)" + player1.getWins() + ", " + player1.getTies() + ", "
-					+ player1.getLosses() + "\n");
-		}
+		int wins = player1.getWins();
+		int ties = player1.getTies();
+		int losses = player1.getLosses();
+		Platform.runLater(()->addToTextArea("Player 1 (wins, ties, losses)" + wins + ", " + ties + ", "
+				+ losses + "\n"));
 		if (player1 instanceof AIPlayer) {
 			AIPlayer aiPlayer1 = (AIPlayer) player1;
 			if (aiPlayer1.isIntelligent()) {
@@ -134,18 +130,8 @@ public class Driver extends Application {
 			started = false;
 		}
 	}
-
-	public class Console extends OutputStream {
-
-		private TextArea textArea;
-
-		public Console(TextArea textArea) {
-			this.textArea = textArea;
-		}
-
-		@Override
-		public void write(int i) throws IOException {
-			textArea.appendText(String.valueOf((char) i));
-		}
+	
+	public static void addToTextArea(String message) {
+		textArea.appendText(message);
 	}
 }
