@@ -102,7 +102,7 @@ public class Driver extends Application {
 		int wins = player1.getWins();
 		int ties = player1.getTies();
 		int losses = player1.getLosses();
-		Platform.runLater(()->addToTextArea("Player 1 (wins, ties, losses)" + wins + ", " + ties + ", "
+		Platform.runLater(()->addToTextArea("Player 1 (wins, ties, losses) " + wins + ", " + ties + ", "
 				+ losses + "\n"));
 		if (player1 instanceof AIPlayer) {
 			AIPlayer aiPlayer1 = (AIPlayer) player1;
