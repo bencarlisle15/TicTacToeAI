@@ -1,3 +1,4 @@
+import java.io.FileWriter;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -82,10 +83,25 @@ public class Driver extends Application {
 				}
 			}).start();
 		});
+		Button reset = new Button("Reset");
+		reset.setOnAction(value -> {
+			try {
+				FileWriter johnFileWriter = new FileWriter("PositionsJohn.txt");
+				FileWriter donaldFileWriter = new FileWriter("PositionsDonald.txt");
+				johnFileWriter.write("");
+				donaldFileWriter.write("");
+				johnFileWriter.close();
+				donaldFileWriter.close();
+				Platform.runLater(()->addToTextArea("Reset AI"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 		options.getChildren().add(trials);
 		options.getChildren().add(player1Options);
 		options.getChildren().add(player2Options);
 		options.getChildren().add(submit);
+		options.getChildren().add(reset);
 		mainPane.setTop(options);
 		mainPane.setCenter(textArea);
 		stage.setTitle("TicTacToe AI");
